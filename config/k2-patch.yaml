@@ -1,0 +1,32 @@
+---
+machine:
+  network:
+    hostname: k2
+    interfaces:
+      - interface: end0
+        dhcp: true
+        vip:
+          ip: 10.0.2.1
+  install:
+    disk: /dev/mmcblk0
+cluster:
+  controlPlane:
+    endpoint: https://10.0.2.1:6443
+  apiServer:
+    extraArgs:
+      oidc-issuer-url: https://dex.homelab.evilcyborgdrone.com
+      oidc-client-id: kube-apiserver
+      oidc-username-claim: email
+      oidc-groups-claim: groups
+    certSANs:
+      - 10.0.1.3
+      - k.lan
+      - k2.lan
+  allowSchedulingOnControlPlanes: true
+  features:
+    kubernetesTalosAPIAccess:
+      allowedKubernetesNamespaces:
+        - system-upgrade # or the namespace the controller will be installed to
+      allowedRoles:
+        - os:admin
+      enabled: true
