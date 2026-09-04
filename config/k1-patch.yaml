@@ -9,6 +9,14 @@ machine:
           ip: 10.0.2.1
   install:
     disk: /dev/mmcblk0
+    image: factory.talos.dev/metal-installer/84c9c1764180a97c7499a3715d76400622d2b24455387b659ae4016b158eac9b:v1.13.3
+  features:
+    kubernetesTalosAPIAccess:
+      allowedKubernetesNamespaces:
+        - system-upgrade # or the namespace the controller will be installed to
+      allowedRoles:
+        - os:admin
+      enabled: true
 cluster:
   controlPlane:
     endpoint: https://10.0.2.1:6443
@@ -23,10 +31,26 @@ cluster:
       - k.lan
       - k1.lan
   allowSchedulingOnControlPlanes: true
-  features:
-    kubernetesTalosAPIAccess:
-      allowedKubernetesNamespaces:
-        - system-upgrade # or the namespace the controller will be installed to
-      allowedRoles:
-        - os:admin
-      enabled: true
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: disk.transport == 'usb'
+  minSize: 30GB
+  maxSize: 30GB
+  grow: false
+
+---
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: csi-data
+provisioning:
+  diskSelector:
+    match: "!system_disk"
+  minSize: 2GB
