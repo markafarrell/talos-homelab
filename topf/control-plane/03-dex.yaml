@@ -1,0 +1,26 @@
+---
+apiVersion: v1alpha1
+kind: KubeAuthenticationConfig
+configuration:
+  anonymous:
+      conditions:
+          - path: /livez
+          - path: /readyz
+          - path: /healthz
+      enabled: true
+
+  jwt:
+    - issuer:
+        url: https://dex.homelab.evilcyborgdrone.com
+        audiences:
+        - kube-apiserver
+      claimMappings:
+        username:
+          claim: email
+          prefix: ""
+        groups:
+          claim: groups
+          prefix: ""
+      userValidationRules:
+      - expression: "!user.username.startsWith('system:')"
+        message: "username cannot use reserved system: prefix"
