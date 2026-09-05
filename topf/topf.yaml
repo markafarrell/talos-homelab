@@ -1,0 +1,21 @@
+kubernetesVersion: 1.37.0
+talosVersion: 1.14.0
+clusterEndpoint: https://10.0.2.1:6443
+clusterName: talos-default
+
+nodes:
+  - host: k0
+    role: control-plane
+    schematicId: "@rpi_generic.yaml"
+
+  - host: k1
+    role: control-plane
+    schematicId: "@rpi_generic.yaml"
+
+  - host: k2
+    role: control-plane
+    schematicId: "@rpi_generic.yaml"
+
+  - host: k3
+    role: worker
+    schematicId: 376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba

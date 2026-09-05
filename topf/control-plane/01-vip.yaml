@@ -1,0 +1,11 @@
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.0.2.1
+link: end0
+
+---
+apiVersion: v1alpha1
+kind: KubeClusterConfig
+clusterName: talos-default
+endpoint: https://10.0.2.1:6443
